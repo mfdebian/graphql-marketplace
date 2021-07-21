@@ -1,5 +1,5 @@
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import { gql } from 'graphql-tag';
+import { useQuery } from 'react-apollo';
 import ProductItem from './ProductItem.js';
 
 const PRODUCTS_QUERY = gql`
@@ -14,26 +14,20 @@ const PRODUCTS_QUERY = gql`
 `;
 
 const Products = () => {
+
+  const { data, loading, error } = useQuery(PRODUCTS_QUERY);
+
+  if (loading) return <h2>Loading...</h2>
+  if (error) return <p>ERROR</p>
+  if (!data) return <p>Not found</p>
+
   return (
     <div>
-      Products component
-      <Query query={PRODUCTS_QUERY}>
-        {
-          ({loading, error, data}) => {
-            if(loading) return <h2>Loading...</h2>
-            if(error) console.log(error);
-
-            return <div>
-              {
-                data.products.map(product => {
-                  return <ProductItem key={product.id} product={product}/>
-                })
-              }
-            </div>
-
-          }
-        }
-      </Query>
+      {
+        data.products.map(product => {
+          return <ProductItem key={product.id} product={product}/>
+        })
+      }
     </div>
   )
 }
