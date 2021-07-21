@@ -30,19 +30,66 @@ const RootQuery= new GraphQLObjectType({
       },
       resolve(parentValue, args){
         return axios.get('http://localhost:3000/products/'+ args.id)
-          .then(res => res.data);
+        .then(res => res.data);
       }
     },
     products: {
       type: new GraphQLList(ProductType),
       resolve(parentValue, args){
         return axios.get('http://localhost:3000/products')
-          .then(res => res.data);
+        .then(res => res.data);
       }
     }
   }
 });
 
+// Mutations
+const mutation = new GraphQLObjectType({
+  name:'Mutation',
+  fields:{
+    addProduct:{
+      type:ProductType,
+      args:{
+        name: {type: new GraphQLNonNull(GraphQLString)},
+        category: {type: new GraphQLNonNull(GraphQLString)},
+        price: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, args){
+        return axios.post('http://localhost:3000/products', {
+          name:args.name,
+          category: args.category,
+          price:args.price
+        })
+        .then(res => res.data);
+      }
+    },
+    deleteProduct:{
+      type:ProductType,
+      args:{
+        id:{type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve(parentValue, args){
+        return axios.delete('http://localhost:3000/products/'+args.id)
+        .then(res => res.data);
+      }
+    },
+    editProduct:{
+      type:ProductType,
+      args:{
+        id:{type: new GraphQLNonNull(GraphQLString)},
+        name: {type: GraphQLString},
+        category: {type: GraphQLString},
+        price: {type: GraphQLInt}
+      },
+      resolve(parentValue, args){
+        return axios.patch('http://localhost:3000/products/'+args.id, args)
+        .then(res => res.data);
+      }
+    },
+  }
+});
+
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation
 });
