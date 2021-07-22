@@ -1,4 +1,5 @@
 import './App.css';
+// todo: change package for @apollo/client
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import Products from './components/Products.js'

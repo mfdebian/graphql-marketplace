@@ -1,7 +1,24 @@
 const express = require('express');
 const expressGraphQL = require('express-graphql').graphqlHTTP;
-const schema = require('./schema.js');
+const schema = require('./graphql/schema.js');
 const cors = require('cors');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient()
+
+// how to save data into the database
+// prisma.product.create({
+//   data: {
+//     name: "Guitar",
+//     category: "Musical Instruments",
+//     price: 500
+//   }
+// })
+// .then(res => {
+//   console.log("RES:", res);
+// })
+// .catch(err => {
+//   console.log("ERR:", err);
+// });
 
 const app = express();
 
