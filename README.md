@@ -67,3 +67,26 @@ mutation{
   	price  
 	}
 }
+
+PRISMA CRUD OPERATIONS:
+
+create:
+ curl -s -X POST -H 'content-type: application/json' -d '{"name": "Ball", "category": "Sports", "price": 30 }' localhost:4000/products | json
+
+read:
+curl -s localhost:4000/products | json
+
+delete:
+ curl -s -X DELETE localhost:4000/products/4 | json
+
+docker comands:
+
+check docker images:
+docker ps -a
+
+run (start) docker image:
+docker start docker-image-name
+in this case: docker start e-commerce-postgresql
+
+check running (started) docker images:
+docker ps
