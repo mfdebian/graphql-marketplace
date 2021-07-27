@@ -29,14 +29,14 @@ const RootQuery= new GraphQLObjectType({
         id: {type:GraphQLString}
       },
       resolve(parentValue, args){
-        return axios.get('http://localhost:3000/products/'+ args.id)
+        return axios.get('http://localhost:4000/products/'+ args.id)
         .then(res => res.data);
       }
     },
     products: {
       type: new GraphQLList(ProductType),
       resolve(parentValue, args){
-        return axios.get('http://localhost:3000/products')
+        return axios.get('http://localhost:4000/products')
         .then(res => res.data);
       }
     }
@@ -55,7 +55,7 @@ const mutation = new GraphQLObjectType({
         price: {type: new GraphQLNonNull(GraphQLInt)}
       },
       resolve(parentValue, args){
-        return axios.post('http://localhost:3000/products', {
+        return axios.post('http://localhost:4000/products', {
           name:args.name,
           category: args.category,
           price:args.price
@@ -69,7 +69,7 @@ const mutation = new GraphQLObjectType({
         id:{type: new GraphQLNonNull(GraphQLString)}
       },
       resolve(parentValue, args){
-        return axios.delete('http://localhost:3000/products/'+args.id)
+        return axios.delete('http://localhost:4000/products/'+args.id)
         .then(res => res.data);
       }
     },
@@ -82,7 +82,7 @@ const mutation = new GraphQLObjectType({
         price: {type: GraphQLInt}
       },
       resolve(parentValue, args){
-        return axios.patch('http://localhost:3000/products/'+args.id, args)
+        return axios.patch('http://localhost:4000/products/'+args.id, args)
         .then(res => res.data);
       }
     },
