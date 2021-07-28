@@ -1,11 +1,10 @@
 import './App.css';
-// todo: change package for @apollo/client
-import ApolloClient from 'apollo-boost';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import Products from './components/Products.js'
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache(),
 });
 
 const App = () => {

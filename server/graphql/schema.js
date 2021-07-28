@@ -59,6 +59,9 @@ const mutation = new GraphQLObjectType({
           name:args.name,
           category: args.category,
           price:args.price
+        },
+        {
+          headers: {'Content-type': 'application/json'}
         })
         .then(res => res.data);
       }
