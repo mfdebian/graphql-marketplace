@@ -19,12 +19,14 @@ const Products = () => {
   if (loading) return <h2>Loading...</h2>
   if (error) return <p>ERROR</p>
   if (!data) return <p>Not found</p>
+  let products = data.products.slice();
+  products = products.reverse();
 
   return (
     <div>
-      <AddProduct />
+      <AddProduct productsQueryToBeRefetchedAfterMutation={PRODUCTS_QUERY}/>
       {
-        data.products.map(product => {
+        products.map(product => {
           return <ProductItem key={product.id} product={product}/>
         })
       }

@@ -11,12 +11,17 @@ const ADD_PRODUCT = gql`
 	}
 `;
 
-const AddProduct = () => {
-
+const AddProduct = (props) => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
 	const [price, setPrice] = useState('');
-	const [addProduct] = useMutation(ADD_PRODUCT);
+	const [addProduct] = useMutation(ADD_PRODUCT,
+    {
+      refetchQueries: [
+        {query: props.productsQueryToBeRefetchedAfterMutation},
+        'ProductsQuery'
+      ],
+    });
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -32,7 +37,6 @@ const AddProduct = () => {
   }
 
   const addProductHandler = (name, category, price) => {
-    console.log(name, category, price);  
     addProduct({variables: {name: name, category: category, price: price}})
 			.then(res => {
 				console.log(res);
