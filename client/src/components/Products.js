@@ -27,7 +27,7 @@ const Products = () => {
       <AddProduct productsQueryToBeRefetchedAfterMutation={PRODUCTS_QUERY}/>
       {
         products.map(product => {
-          return <ProductItem key={product.id} product={product}/>
+          return <ProductItem key={product.id} product={product} productsQueryToBeRefetchedAfterMutation={PRODUCTS_QUERY}/>
         })
       }
     </div>

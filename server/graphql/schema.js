@@ -72,7 +72,10 @@ const mutation = new GraphQLObjectType({
         id:{type: new GraphQLNonNull(GraphQLString)}
       },
       resolve(parentValue, args){
-        return axios.delete('http://localhost:4000/products/'+args.id)
+        return axios.delete('http://localhost:4000/products/'+args.id,
+        {
+          headers: {'Content-type': 'application/json'}
+        })
         .then(res => res.data);
       }
     },
