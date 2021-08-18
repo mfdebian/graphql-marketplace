@@ -1,17 +1,7 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import { PRODUCTS_QUERY } from '../graphql/graphQLQueries.js'
 import ProductItem from './ProductItem.js';
 import AddProduct from './AddProduct.js';
-
-const PRODUCTS_QUERY = gql`
-  query ProductsQuery {
-    products {
-      id,
-      name,
-      price,
-      category
-    }
-  }
-`;
 
 const Products = () => {
   const { data, loading, error } = useQuery(PRODUCTS_QUERY);
@@ -24,10 +14,11 @@ const Products = () => {
 
   return (
     <div>
-      <AddProduct productsQueryToBeRefetchedAfterMutation={PRODUCTS_QUERY}/>
+      <h1>Products</h1>
+      <AddProduct />
       {
         products.map(product => {
-          return <ProductItem key={product.id} product={product} productsQueryToBeRefetchedAfterMutation={PRODUCTS_QUERY}/>
+          return <ProductItem key={product.id} product={product} />
         })
       }
     </div>

@@ -19,8 +19,9 @@ module.exports = (app) => {
   });
 
   app.get('/products', (request, response, next) => {
-    prisma.product.findMany()
+    prisma.product.findMany({orderBy: [{id: 'asc'}]})
       .then(products => {
+
         response.json(products);
       })
       .catch(next);

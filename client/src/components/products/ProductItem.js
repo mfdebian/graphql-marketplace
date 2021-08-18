@@ -1,20 +1,13 @@
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
+import { PRODUCTS_QUERY, DELETE_PRODUCT } from '../graphql/graphQLQueries';
 
-const DELETE_PRODUCT = gql`
-  mutation deleteProduct($id:String!){
-    deleteProduct(id: $id) {
-      id
-    }
-  }
-`;
+const ProductItem = ({product}) => {
 
-const ProductItem = (props) => {
-
-  const { id, name, category, price } = props.product;
+  const { id, name, category, price } = product;
   const [deleteProduct] = useMutation(DELETE_PRODUCT,
     {
       refetchQueries: [
-        {query: props.productsQueryToBeRefetchedAfterMutation},
+        {query: PRODUCTS_QUERY},
         'ProductsQuery'
       ],
     }

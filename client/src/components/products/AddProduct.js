@@ -1,24 +1,16 @@
 import React, { useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
+import { PRODUCTS_QUERY, ADD_PRODUCT } from '../graphql/graphQLQueries.js'
 
-const ADD_PRODUCT = gql`
-	mutation AddProduct($name:String!, $category: String!, $price:Int! ){
-		addProduct(name: $name, category: $category, price: $price) {
-			name
-			category
-			price
-		}
-	}
-`;
 
-const AddProduct = (props) => {
+const AddProduct = () => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
 	const [price, setPrice] = useState('');
 	const [addProduct] = useMutation(ADD_PRODUCT,
     {
       refetchQueries: [
-        {query: props.productsQueryToBeRefetchedAfterMutation},
+        {query: PRODUCTS_QUERY},
         'ProductsQuery'
       ],
     });
@@ -47,7 +39,9 @@ const AddProduct = (props) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
+      <h3>Add product</h3>
+      <form onSubmit={handleSubmit}>
       <input
         type="text"
         name="name"
@@ -77,6 +71,8 @@ const AddProduct = (props) => {
        value="submit"
       />
     </form>
+    </div>
+    
   );
 }
 

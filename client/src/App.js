@@ -1,6 +1,6 @@
 import './App.css';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import Products from './components/Products.js'
+import Navbar from './components/navbar/Navbar.js'
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
@@ -23,8 +23,8 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <div className="App">
-        <h1>Main App Component</h1>
-        <Products />
+        <h1>E-commerce App</h1>
+        <Navbar />
       </div>
     </ApolloProvider>
   );
