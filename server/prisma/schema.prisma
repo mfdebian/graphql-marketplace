@@ -10,9 +10,47 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy Int?
+  name String
+  email String
+  password String
+  role String
+  shoppingCart ShoppingCart?
+  createdProducts Product[]
+}
+
 model Product {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy Int
   name      String
   category  String
   price     Int
+  ShoppingCartProducts ShoppingCartProduct[]
+  user User @relation(fields: [createdBy], references: [id])
+}
+
+model ShoppingCart {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy Int @unique
+  shoppingCartProducts ShoppingCartProduct[]
+  user User @relation(fields: [createdBy], references: [id])
+}
+
+model ShoppingCartProduct {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  shopppingCartId Int
+  productId Int
+  quantity Int
+  shoppingCart ShoppingCart @relation(fields: [shopppingCartId], references: [id]) 
+  product Product @relation(fields: [productId], references: [id])
 }

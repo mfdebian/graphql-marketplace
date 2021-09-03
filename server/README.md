@@ -79,6 +79,15 @@ curl -s localhost:4000/products | json
 delete:
  curl -s -X DELETE localhost:4000/products/4 | json
 
+after prisma updates on models:
+// pushear cambios de models
+$ npx prisma db push
+// para actualizar el cliente de prisma
+$ npx prisma generate
+// después de actualizar el cliente, volver a arrancar prisma studio (refresh)
+
+
+
 docker comands:
 
 check docker images:
@@ -90,3 +99,4 @@ in this case: docker start e-commerce-postgresql
 
 check running (started) docker images:
 docker ps
+

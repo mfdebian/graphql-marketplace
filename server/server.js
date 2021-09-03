@@ -9,6 +9,46 @@ const errorHandler = require('./middleware/error');
 
 const prisma = new PrismaClient();
 
+/*
+TO TEST MODELS QUICKLY
+prisma.user.create({
+  data: {
+    name: "user de prueba",
+    email: "user@user.com",
+    password: "123456",
+    role: "admn"
+  }
+})
+.then(res => {
+  console.log("THEN RESPONSE:", res);
+})
+.catch(err => {
+});
+*/
+/*
+let shoppingCart = {
+  user: {
+    connect: { id: 1 }
+  },
+  shoppingCartProducts: {
+    create: {
+      productId: 1,
+      quantity: 1
+    }
+  }
+}
+
+prisma.shoppingCart.upsert({
+  where: {createdBy: 1},
+  create: shoppingCart,
+  update: shoppingCart
+})
+.then(console.log)
+.catch(console.error) */
+
+
+
+
 const app = express();
 
 app.set('prisma', prisma);
