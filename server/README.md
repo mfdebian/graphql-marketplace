@@ -41,6 +41,34 @@ example 2:
   }
 }
 
+example 3:
+{
+  users {
+    id,
+    name,
+    email,
+    password,
+    role
+  }
+}
+
+example 4:
+{
+  users {
+    id,
+    name,
+    email,
+    password,
+    role,
+    createdProducts {
+      id,
+      name,
+      category,
+      price
+    }
+  }
+}
+
 mutation addProduct:
 mutation{
   addProduct(name: "Computer", category: "Technology", price: 200) {
@@ -71,13 +99,19 @@ mutation{
 PRISMA CRUD OPERATIONS:
 
 create:
- curl -s -X POST -H 'content-type: application/json' -d '{"name": "Ball", "category": "Sports", "price": 30 }' localhost:4000/products | json
+curl -s -X POST -H 'content-type: application/json' -d '{"name": "User from Curl Request", "email": "user@curl.com", "password": "12345", "role": "admin" }' localhost:4000/users | json
+
+curl -s -X POST -H 'content-type: application/json' -d '{"createdBy": 2 }' localhost:4000/shoppingCarts | json
+ 
+curl -s -X POST -H 'content-type: application/json' -d '{"name": "Ball", "category": "Sports", "price": 30 }' localhost:4000/products | json
 
 read:
 curl -s localhost:4000/products | json
+curl -s localhost:4000/shoppingCarts | json
 
 delete:
- curl -s -X DELETE localhost:4000/products/4 | json
+curl -s -X DELETE localhost:4000/products/4 | json
+curl -s -X DELETE localhost:4000/shoppingCarts/3 | json
 
 after prisma updates on models:
 // pushear cambios de models

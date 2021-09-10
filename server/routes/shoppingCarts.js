@@ -21,7 +21,11 @@ module.exports = (app) => {
   app.get('/shoppingCarts', (request, response, next) => {
     prisma.shoppingCart.findMany({orderBy: [{id: 'asc'}],
       include: {
-        products: true,
+        shoppingCartProducts: {
+          include: {
+            product: true
+          }
+        }
       }
     })
       .then(shoppingCarts => {

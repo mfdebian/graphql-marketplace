@@ -48,9 +48,9 @@ model ShoppingCartProduct {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  shopppingCartId Int
+  shoppingCartId Int
   productId Int
   quantity Int
-  shoppingCart ShoppingCart @relation(fields: [shopppingCartId], references: [id]) 
+  shoppingCart ShoppingCart @relation(fields: [shoppingCartId], references: [id]) 
   product Product @relation(fields: [productId], references: [id])
 }

@@ -8,6 +8,19 @@ const {
   GraphQLNonNull
 } = require('graphql');
 
+// User Type
+const UserType = new GraphQLObjectType({
+  name: "User",
+  fields: () => ({
+    id: {type:GraphQLString},
+    name: {type: GraphQLString},
+    email: {type: GraphQLString},
+    password: {type: GraphQLString},
+    role: {type: GraphQLString},
+    createdProducts : {type: GraphQLList(ProductType)}
+  })
+})
+
 // Product Type
 const ProductType = new GraphQLObjectType({
   name: 'Product',
@@ -16,6 +29,15 @@ const ProductType = new GraphQLObjectType({
     name: {type: GraphQLString},
     category: {type: GraphQLString},
     price: {type: GraphQLInt},
+  })
+});
+
+// ShoppingCart Type
+const ShoppingCartType = new GraphQLObjectType({
+  name: 'ShoppingCart',
+  fields: () => ({
+    id: {type:GraphQLString},
+    createdBy: {type:GraphQLInt},
   })
 });
 
@@ -29,7 +51,7 @@ const RootQuery= new GraphQLObjectType({
         id: {type:GraphQLString}
       },
       resolve(parentValue, args){
-        return axios.get('http://localhost:4000/products/'+ args.id)
+        return axios.get('http://localhost:4000/products/'+args.id)
         .then(res => res.data);
       }
     },
@@ -37,6 +59,40 @@ const RootQuery= new GraphQLObjectType({
       type: new GraphQLList(ProductType),
       resolve(parentValue, args){
         return axios.get('http://localhost:4000/products')
+        .then(res => res.data);
+      }
+    },
+    shoppingCart: {
+      type: ShoppingCartType,
+      args: {
+        id: {type: GraphQLString}
+      },
+      resolve(parentValue, args){
+        return axios.get('http://localhost:4000/shoppingCarts/'+args.id)
+        .then(res => res.data);
+      }
+    },
+    shoppingCarts: {
+      type: new GraphQLList(ShoppingCartType),
+      resolve(parentValue, args){
+        return axios.get('http://localhost:4000/shoppingCarts/')
+        .then(res => res.data);
+      }
+    },
+    user: {
+      type: UserType,
+      args: {
+        id: {type:GraphQLString}
+      },
+      resolve(parentValue, args){
+        return axios.get('http://localhost:4000/users/'+args.id)
+        .then(res => res.data);
+      }
+    },
+    users: {
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args){
+        return axios.get('http://localhost:4000/users/')
         .then(res => res.data);
       }
     }
