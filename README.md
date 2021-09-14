@@ -40,7 +40,19 @@ En este proyecto, desarrollaremos un sitio web de compra de productos, en el cua
 
 ## 4. Consideraciones generales
 
-## 5. Criterios de aceptación mínimos del proyecto
+## 5. Requerimientos funcionales del proyecto
+
+HU: Yo como developer quiero poder arrancar el proyecto con un user root con credenciales desde .env para poder tener privilegios de root
+
+HU: Yo como user root debo poder crear users con role admin
+
+HU: Yo como user admin debo poder crear, editar y eliminar productos
+
+HU: Yo como user debo poder ver la lista de productos en el catálogo
+
+HU: Yo como user debo poder agregar productos a un carrito de compras
+
+![storyboard](https://user-images.githubusercontent.com/12631491/133333559-59a0e715-9078-4b6b-8ff2-1ff368ba2c93.jpg)
 
 ### Definición del producto
 
