@@ -72,6 +72,10 @@ app.use(errorHandler);
 
 const port = 4000;
 
-app.listen(port, () => {
-  console.log("The server is running on port:", port);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log("The server is running on port:", port);
+  });
+}
+
+exports.app = app;
