@@ -80,7 +80,6 @@ describe('POST /auth', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toHaveProperty('token');
         expect(typeof response.body.token).toBe('string');
-        expect(response.body.token.length).toBe(105);
         expect(prisma.user.findUnique).toHaveBeenCalled();
       });
   });

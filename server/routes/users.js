@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 // request handler
 module.exports = (app) => {
   const prisma = app.get('prisma');
-  app.param('userId', (req, res, next, idString) => {
+  app.param('userId', (req, _, next, idString) => {
     // change id string to be Int instead of String
     let idInt = parseInt(idString);
     prisma.user.findUnique({
@@ -20,16 +20,19 @@ module.exports = (app) => {
       .catch(next)
   });
 
-  app.get('/users', (request, response, next) => {
+  app.get('/users', (req, resp, next) => {
+    if (!req.auth) {
+      return next(401);
+    }
     prisma.user.findMany({ orderBy: [{ id: 'asc' }] })
       .then(users => {
-        response.json(users);
+        resp.json(users);
       })
       .catch(next);
   });
 
-  app.get('/users/:userId', (req, res, next) => {
-    res.json(req.user);
+  app.get('/users/:userId', (req, resp, next) => {
+    resp.json(req.user);
   });
 
   app.post('/users', (req, resp, next) => {
@@ -47,11 +50,11 @@ module.exports = (app) => {
       .catch(next);
   });
 
-  app.delete('/users/:userId', (req, res, next) => {
+  app.delete('/users/:userId', (req, resp, next) => {
     prisma.user.delete({
       where: { id: req.user.id }
     })
-      .then(user => res.json(user))
+      .then(user => resp.json(user))
       .catch(next);
   });
 }

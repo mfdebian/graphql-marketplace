@@ -1,6 +1,86 @@
 const request = require('supertest');
 const { PrismaClient } = require('@prisma/client');
+const jwt = require('jsonwebtoken');
 const { app } = require('../server');
+
+describe('GET /users', () => {
+  beforeEach(() => {
+    PrismaClient.mockClear();
+    jwt.verify.mockClear();
+  });
+
+  it('should respond with 401 when no auth', () => (
+    request(app)
+      .get('/users')
+      .then((response) => {
+        expect(response.statusCode).toBe(401);
+      })
+  ));
+
+  it('should respond with 401 when token is not of type Bearer', () => (
+    request(app)
+      .get('/users')
+      .auth('my_token', { type: 'basic' })
+      .then((response) => {
+        expect(response.statusCode).toBe(401);
+      })
+  ));
+
+  it('should respond with 401 when token can not be verified', () => (
+    request(app)
+      .get('/users')
+      .auth('my_token', { type: 'bearer' })
+      .then((response) => {
+        expect(response.statusCode).toBe(401);
+        expect(jwt.verify).toHaveBeenCalledTimes(1);
+        expect(jwt.verify.mock.calls[0][0]).toBe('my_token');
+        expect(jwt.verify.mock.calls[0][1]).toBe('super-secret');
+      })
+  ));
+
+  it('should respond with 401 when auth user not found', () => {
+    jwt.verify.mockImplementationOnce((_, __, cb) => cb(null, {}));
+    const prisma = Object.assign(new PrismaClient(), {
+      user: { findUnique: jest.fn().mockResolvedValueOnce(null) },
+    });
+    return request(app)
+      .get('/users')
+      .auth('my_token', { type: 'bearer' })
+      .then((response) => {
+        expect(response.statusCode).toBe(401);
+        expect(jwt.verify).toHaveBeenCalledTimes(1);
+        expect(prisma.user.findUnique).toHaveBeenCalledTimes(1);
+      });
+  });
+
+  it('should respond with users list when auth ok', () => {
+    jwt.verify.mockImplementationOnce((_, __, cb) => cb(null, {}));
+    const prisma = Object.assign(new PrismaClient(), {
+      user: {
+        findUnique: jest.fn().mockResolvedValueOnce({ uid: 1 }),
+        findMany: jest.fn().mockResolvedValueOnce([
+          { id: 1, name: 'foo' },
+          { id: 2, name: 'bar' },
+          { id: 3, name: 'baz' },
+        ]),
+      },
+    });
+    return request(app)
+      .get('/users')
+      .auth('my_token', { type: 'bearer' })
+      .then((response) => {
+        expect(response.body).toEqual([
+          { id: 1, name: 'foo' },
+          { id: 2, name: 'bar' },
+          { id: 3, name: 'baz' },
+        ]);
+        expect(response.statusCode).toBe(200);
+        expect(jwt.verify).toHaveBeenCalledTimes(1);
+        expect(prisma.user.findUnique).toHaveBeenCalledTimes(1);
+        expect(prisma.user.findMany).toHaveBeenCalledTimes(1);
+      });
+  });
+});
 
 describe('POST /users', () => {
   beforeEach(() => {

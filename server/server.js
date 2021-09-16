@@ -6,6 +6,7 @@ const { PrismaClient } = require('@prisma/client');
 const schema = require('./graphql/schema.js');
 const registerRoutes = require('./routes');
 const notFoundhandler = require('./middleware/404');
+const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
 
 dotenv.config();
@@ -65,9 +66,11 @@ app.use(cors());
 // parse json
 app.use(express.json());
 
+app.use(authMiddleware(app));
+
 app.use('/graphql', expressGraphQL({
-    schema:schema,
-    graphiql:true
+  schema: schema,
+  graphiql: true
 }));
 
 registerRoutes(app);
