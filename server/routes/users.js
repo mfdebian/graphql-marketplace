@@ -3,7 +3,11 @@ const bcrypt = require('bcrypt');
 // request handler
 module.exports = (app) => {
   const prisma = app.get('prisma');
+
   app.param('userId', (req, _, next, idString) => {
+    if (req.auth?.user?.role !== 'admin') {
+      return next(401);
+    }
     // change id string to be Int instead of String
     let idInt = parseInt(idString);
     prisma.user.findUnique({

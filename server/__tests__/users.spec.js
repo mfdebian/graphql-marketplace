@@ -82,6 +82,70 @@ describe('GET /users', () => {
   });
 });
 
+describe('GET /users/:userId', () => {
+  beforeEach(() => {
+    // const prisma = new PrismaClient();
+    // prisma.user.findUnique.mockClear();
+    PrismaClient.mockClear();
+  });
+
+  it('should respond with 401 when no auth', () => (
+    request(app)
+      .get('/users/1')
+      .then((response) => {
+        expect(response.statusCode).toBe(401);
+      })
+  ));
+
+  it('should respond with 401 when not admin or self', () => {
+    jwt.verify.mockImplementationOnce((_, __, cb) => cb(null, { uid: 1 }));
+    const prisma = Object.assign(new PrismaClient(), {
+      user: { findUnique: jest.fn().mockResolvedValueOnce({ id: 1 }) },
+    });
+    return request(app)
+      .get('/users/1')
+      .auth('my_token', { type: 'bearer' })
+      .then((response) => {
+        expect(response.statusCode).toBe(401);
+      });
+  });
+
+  it('should respond with 404 when not found', () => {
+    jwt.verify.mockImplementationOnce((_, __, cb) => cb(null, { uid: 1 }));
+    const prisma = Object.assign(new PrismaClient(), {
+      user: {
+        findUnique: jest.fn().mockImplementation(({ where }) => Promise.resolve(
+          where.id === 1
+            ? { id: 1, role: 'admin' }
+            : null
+        )),
+      },
+    });
+    return request(app)
+      .get('/users/2')
+      .auth('my_token', { type: 'bearer' })
+      .then((response) => {
+        expect(response.statusCode).toBe(404);
+      });
+  });
+
+  it('should respond with user when admin', () => {
+    jwt.verify.mockImplementationOnce((_, __, cb) => cb(null, { uid: 1 }));
+    const prisma = Object.assign(new PrismaClient(), {
+      user: {
+        findUnique: jest.fn().mockResolvedValue({ id: 1, role: 'admin' }),
+      },
+    });
+    return request(app)
+      .get('/users/1')
+      .auth('my_token', { type: 'bearer' })
+      .then((response) => {
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual({ id: 1, role: 'admin' });
+      });
+  });
+});
+
 describe('POST /users', () => {
   beforeEach(() => {
     PrismaClient.mockClear();

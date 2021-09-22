@@ -22,7 +22,7 @@ module.exports = (app) => {
         return next(401);
       }
 
-      prisma.user.findUnique({ id: decodedToken.uid })
+      prisma.user.findUnique({ where: { id: decodedToken.uid } })
         .then((user) => {
           if (!user) {
             return next(401);
