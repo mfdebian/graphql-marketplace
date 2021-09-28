@@ -10,47 +10,51 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  admin
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  createdBy Int?
-  name String
-  email String
-  password String
-  role String
-  shoppingCart ShoppingCart?
+  id              Int           @id @default(autoincrement())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  createdBy       Int?
+  name            String
+  email           String
+  password        String
+  role            Role?
+  shoppingCart    ShoppingCart?
   createdProducts Product[]
 }
 
 model Product {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  createdBy Int
-  name      String
-  category  String
-  price     Int
+  id                   Int                   @id @default(autoincrement())
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  createdBy            Int
+  name                 String
+  category             String
+  price                Int
   ShoppingCartProducts ShoppingCartProduct[]
-  user User @relation(fields: [createdBy], references: [id])
+  user                 User                  @relation(fields: [createdBy], references: [id])
 }
 
 model ShoppingCart {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  createdBy Int @unique
+  id                   Int                   @id @default(autoincrement())
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  createdBy            Int                   @unique
   shoppingCartProducts ShoppingCartProduct[]
-  user User @relation(fields: [createdBy], references: [id])
+  user                 User                  @relation(fields: [createdBy], references: [id])
 }
 
 model ShoppingCartProduct {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   shoppingCartId Int
-  productId Int
-  quantity Int
-  shoppingCart ShoppingCart @relation(fields: [shoppingCartId], references: [id]) 
-  product Product @relation(fields: [productId], references: [id])
+  productId      Int
+  quantity       Int
+  shoppingCart   ShoppingCart @relation(fields: [shoppingCartId], references: [id])
+  product        Product      @relation(fields: [productId], references: [id])
 }
