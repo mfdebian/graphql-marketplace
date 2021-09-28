@@ -1,1 +1,0 @@
-exports.PrismaClient = jest.fn().mockReturnValue({});

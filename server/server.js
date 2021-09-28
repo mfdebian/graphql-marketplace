@@ -1,17 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const expressGraphQL = require('express-graphql').graphqlHTTP;
-const dotenv = require('dotenv');
-const { PrismaClient } = require('@prisma/client');
 const schema = require('./graphql/schema.js');
+const { PrismaClient } = require('@prisma/client');
 const registerRoutes = require('./routes');
 const notFoundhandler = require('./middleware/404');
-const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
-
-dotenv.config();
-
-const { JWT_SECRET } = process.env;
 
 const prisma = new PrismaClient();
 
@@ -58,7 +52,6 @@ prisma.shoppingCart.upsert({
 const app = express();
 
 app.set('prisma', prisma);
-app.set('jwtSecret', JWT_SECRET);
 
 // enable `cors` to set HTTP response header: Access-Control-Allow-Origin: *
 app.use(cors());
@@ -66,11 +59,9 @@ app.use(cors());
 // parse json
 app.use(express.json());
 
-app.use(authMiddleware(app));
-
 app.use('/graphql', expressGraphQL({
-  schema: schema,
-  graphiql: true
+    schema:schema,
+    graphiql:true
 }));
 
 registerRoutes(app);
@@ -81,10 +72,6 @@ app.use(errorHandler);
 
 const port = 4000;
 
-if (require.main === module) {
-  app.listen(port, () => {
-    console.log("The server is running on port:", port);
-  });
-}
-
-exports.app = app;
+app.listen(port, () => {
+  console.log("The server is running on port:", port);
+});
